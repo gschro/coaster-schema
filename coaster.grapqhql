@@ -1,0 +1,109 @@
+enum ParkType {
+  WATER
+  PARK
+  OTHER
+}
+
+type ParkSection {
+  name: String!
+  theme: String
+  park: Park
+  attractions: [Attraction!] @relation
+  food: [Food!] @relation
+}
+
+type Food {
+  company: Company!
+  section: ParkSection
+}
+
+type Park {
+  title: String!
+  description: String
+  categories: [String!]
+  company: Company
+  resort: Company
+  type: ParkType!
+  sections: [ParkSection] @relation
+}
+
+enum AttractionType {
+  COASTER
+  FLAT
+  WATER
+  DARK
+  SHOW
+  WALKTHROUGH
+  KID
+  OTHER
+}
+
+type Attraction {
+  name: String!
+  type: AttractionType
+  section: ParkSection
+}
+
+type Person {
+  first: String!
+  last: String!
+  title: String
+  email: String
+  social: [Social]
+  website: String
+  phone: String
+  company: Company
+}
+
+enum SocialNetwork {
+  TWITTER
+  INSTAGRAM
+  YOUTUBE
+}
+
+type Social @embedded {
+  type: SocialNetwork!
+  username: String!
+  url: String
+}
+
+type User {
+  email: String!
+  person: Person
+}
+
+enum CompanyType {
+  OPERATOR
+  MANUFACTURER
+  MEDIA
+  AIRPORT
+  HOTEL
+  STORE
+  OTHER
+}
+
+type Company {
+  name: String!
+  address: Address
+  website: String
+  phone: String
+  people: [Person!] @relation
+  social: [Social!]
+  type: [CompanyType!]
+  parent: Company
+}
+
+type Address @embedded {
+  name: String
+  street1: String!
+  street2: String
+  city: String!
+  state: String!
+  zip: String!
+  latitude: Float
+  longitude: Float
+}
+
+type Query {
+  findCompaniesByType(type: CompanyType!): [Company]
+}
